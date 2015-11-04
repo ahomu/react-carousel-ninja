@@ -63,7 +63,6 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
       x : evt.clientX,
       y : evt.clientY
     };
-
     this.setState({
       dragging   : true
     });
@@ -73,20 +72,21 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
     if (!this.state.dragging) {
       return;
     }
+    evt.preventDefault();
     this.setState({
       deltaX : evt.clientX - this.startCoordinate.x,
       deltaY : evt.clientY - this.startCoordinate.y
     });
   }
 
-  onMouseUp() {
+  onMouseUp(evt: MouseEvent) {
     if (!this.state.dragging) {
       return;
     }
     this.handleSwipe();
   }
 
-  onMouseLeave() {
+  onMouseLeave(evt: MouseEvent) {
     if (!this.state.dragging) {
       return;
     }
@@ -150,28 +150,27 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
 
   render() {
     /**
+     * 選択された要素が見た目上の中央であるとして、その右側と左側にあるべき要素を分類する
+     *
      * @example this.props.children = [0, 1, 2, 3, 4]
      *          this.props.select   = 3
      */
     const children: React.ReactNode[] = (React.Children as any).toArray(this.props.children);
     const halfSideSize = Math.floor(children.length / 2);
 
-    // [0, 1, 2, 3, 4] => [0, 1, 2]
-    let leftSide = children.slice(0, this.props.select);
-    // [0, 1, 2, 3, 4] => [3]
-    let center = children.slice(this.props.select, this.props.select + 1);
-    // [0, 1, 2, 3, 4] => [4]
-    let rightSide = children.slice(this.props.select + 1, children.length);
+    // [0, 1, 2, *3*, 4] => [0, 1, 2]
+    let leftward = children.slice(0, this.props.select);
+    // [0, 1, 2, *3*, 4] => [4]
+    let rightward = children.slice(this.props.select + 1, children.length);
 
-    if (leftSide.length > halfSideSize) {
-      // right:[4] + left:[0](, [1, 2]) => left:[1, 2] / right:[4, 0]
-      rightSide = [].concat(rightSide, leftSide.splice(0, leftSide.length - halfSideSize));
-    } else if (rightSide.length > halfSideSize) {
-      // right:(2, 3, )[4] + left:[0] => left:[4, 0] / right:[2, 3]
-      leftSide = [].concat(rightSide.splice(halfSideSize), leftSide);
+    // 片側にある過剰分の要素を、もう片側に移して結合する
+    if (leftward.length > halfSideSize) {
+      // right:[4] + left:[0](, [1, 2]) => left:[1, 2]/ center:[3] / right:[4, 0]
+      rightward = [].concat(rightward, leftward.splice(0, leftward.length - halfSideSize));
+    } else if (rightward.length > halfSideSize) {
+      // right:(2, 3, )[4] + left:[0] => left:[4, 0] / center:[1] / right:[2, 3]
+      leftward = [].concat(rightward.splice(halfSideSize), leftward);
     }
-    // left + center + right => [1, 2, 3, 4, 0]
-    const arranged = [].concat(leftSide, center, rightSide);
 
     return (
         <div className={`${this.props.className} carousel-ninja__inner ${this.state.dragging ? 'carousel-ninja__inner--dragging' : ''}`}
@@ -181,35 +180,43 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
              onMouseLeave={this.onMouseLeave.bind(this)}>
 
           {children.map((child: React.ReactNode, i: number) => {
-            const isSelectedChild = (i === this.props.select);
-            const arrangedPosition = arranged.indexOf(child);
+            const isCenter = (i === this.props.select);
+            let isLeftEdge = false;
+            let isRightEdge = false;
 
+            let arrangedPos: number;
             let calcFunction: string;
-            if (arrangedPosition < halfSideSize) {
-              // half of left
-              let baseTranslateX = (halfSideSize - arrangedPosition) * this.state.innerWidth;
+
+            // TODO multiple translateX で表現できないか？ calc() があると IE10, IE11 で transition されない
+            // TODO 50% のかわりに ラッパーのwidth / 2で実数計算するとか？
+            // 左側・右側・中央のいずれに属しているかで位置の指定を変更する
+            if ((arrangedPos = leftward.indexOf(child)) !== -1) {
+              // Leftward [0=1920, 1=1280, 2=640] 左側は配列の始点に向けてオフセットを大きくとる
+              let baseTranslateX = (leftward.length - arrangedPos) * this.state.innerWidth
               calcFunction = `calc(50% - ${baseTranslateX - this.state.deltaX}px)`;
-            } else if (arrangedPosition > halfSideSize) {
-              // half of right
-              let baseTranslateX = (arrangedPosition - halfSideSize) * this.state.innerWidth;
+              isLeftEdge = arrangedPos === 0;
+            } else if ((arrangedPos = rightward.indexOf(child)) !== -1) {
+              // Rightward [0=640, 1=1280, 2=1920] 右側は配列の終点に向けてオフセットを大きくとる
+              let baseTranslateX = (arrangedPos + 1) * this.state.innerWidth
               calcFunction = `calc(50% + ${baseTranslateX + this.state.deltaX}px)`;
+              isRightEdge = arrangedPos === rightward.length - 1;
             } else {
-              // center
+              // Center
               calcFunction = `calc(50% + ${0 + this.state.deltaX}px)`;
             }
 
-            const className = `carousel-ninja__pane ${isSelectedChild ? this.props.activeClass : ''}`;
+            const className = `carousel-ninja__pane ${isCenter ? this.props.activeClass : ''}`;
             const style = {
               left       : calcFunction,
               marginLeft : `-${this.state.innerWidth / 2}px`,
-              opacity    : (arrangedPosition === 0 || (arrangedPosition + 1) === children.length) ? 0 : 1
+              opacity    : (isLeftEdge || isRightEdge) ? 0 : 1
             };
 
             return <div ref={`child-${i}`}
                         className={className}
                         key={i}
                         style={style}
-                        aria-hidden={isSelectedChild ? 'false' : 'true'}>{child}</div>;
+                        aria-hidden={isCenter ? 'false' : 'true'}>{child}</div>;
           })}
 
         </div>

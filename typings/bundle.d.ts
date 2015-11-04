@@ -5,3 +5,4 @@
 /// <reference path="react/react-addons-transition-group.d.ts" />
 /// <reference path="react/react-addons-css-transition-group.d.ts" />
 /// <reference path="debounce.d.ts" />
+/// <reference path="throttleit.d.ts" />
