@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+
+  <title>&lt;CarouselNinja&gt;</title>
+
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-title" content="My App Name">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+
+  <style>
+    .myCarousel {
+      outline: none;
+    }
+    img {
+      user-select:none;
+      -webkit-user-select:none;
+      -moz-user-select:none;
+      -khtml-user-select:none;
+      -webkit-user-drag:none;
+      -khtml-user-drag:none;
+    }
+    .myPane {
+      text-align: center;
+      font-size: 3em;
+      box-sizing: border-box;
+      border: 1px solid gray;
+    }
+
+    .carousel-ninja__inner {
+      width: 100%;
+      height: 480px;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-ninja__inner--dragging .carousel-ninja__pane{
+      transition: none;
+    }
+
+    .carousel-ninja__pane {
+      width: 640px;
+
+      position: absolute;
+      top: 0;
+      list-style-type: none;
+      transition: left 0.15s linear, opacity 0.3s linear;
+    }
+
+    .carousel-ninja__selector {
+      margin: 0;
+      padding: 0;
+    }
+
+    .carousel-ninja__selector-item {
+      float: left;
+      list-style-type: none;
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script src="./libs.js"></script>
+<script src="./react-carousel-ninja.js"></script>
+</body>
+</html>

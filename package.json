@@ -37,7 +37,8 @@
     "debounce": "^1.0.0",
     "react": "^0.14.2",
     "react-addons-css-transition-group": "^0.14.2",
-    "react-dom": "^0.14.2"
+    "react-dom": "^0.14.2",
+    "throttleit": "^1.0.0"
   },
   "devDependencies": {
     "babel": "^5.8.29",

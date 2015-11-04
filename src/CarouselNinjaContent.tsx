@@ -18,7 +18,6 @@ interface CarouselNinjaContentProps extends React.Props<CarouselNinjaContent> {
 }
 
 interface CarouselNinjaContentState {
-  outerWidth?: number;
   innerWidth?: number;
   dragging?: boolean;
   deltaX?: number;
@@ -53,9 +52,8 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
   };
 
   calculateWidth() {
-    const firstChild: Element = this.refs['child-0'] as any;
+    const firstChild: Element = this.refs[`child-${this.props.select}`] as any;
     this.setState({
-      outerWidth : ReactDOM.findDOMNode(this).clientWidth,
       innerWidth : firstChild.clientWidth
     });
   }
@@ -151,46 +149,70 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
   }
 
   render() {
-    let transformDeclaration: string;
+    /**
+     * @example this.props.children = [0, 1, 2, 3, 4]
+     *          this.props.select   = 3
+     */
+    const children: React.ReactNode[] = (React.Children as any).toArray(this.props.children);
+    const halfSideSize = Math.floor(children.length / 2);
 
-    // before calc innerWidth (first mount)
-    if (this.state.innerWidth) {
-      const baseOffsetX = this.state.innerWidth * this.props.select;
-      transformDeclaration = `translate3d(-${baseOffsetX - this.state.deltaX}px, 0, 0)`;
-    } else {
-      const offsetPerPane = 100 / React.Children.count(this.props.children);
-      transformDeclaration = `translate3d(-${offsetPerPane * this.props.select}%, 0, 0)`;
+    // [0, 1, 2, 3, 4] => [0, 1, 2]
+    let leftSide = children.slice(0, this.props.select);
+    // [0, 1, 2, 3, 4] => [3]
+    let center = children.slice(this.props.select, this.props.select + 1);
+    // [0, 1, 2, 3, 4] => [4]
+    let rightSide = children.slice(this.props.select + 1, children.length);
+
+    if (leftSide.length > halfSideSize) {
+      // right:[4] + left:[0](, [1, 2]) => left:[1, 2] / right:[4, 0]
+      rightSide = [].concat(rightSide, leftSide.splice(0, leftSide.length - halfSideSize));
+    } else if (rightSide.length > halfSideSize) {
+      // right:(2, 3, )[4] + left:[0] => left:[4, 0] / right:[2, 3]
+      leftSide = [].concat(rightSide.splice(halfSideSize), leftSide);
     }
-
-    const widthOuterBwInner = (this.state.outerWidth - this.state.innerWidth) || 2;
-    const style = {
-      marginLeft : `${widthOuterBwInner / 2}px`,
-      transform  : transformDeclaration
-    };
+    // left + center + right => [1, 2, 3, 4, 0]
+    const arranged = [].concat(leftSide, center, rightSide);
 
     return (
-      <div ref="outer"
-           className={`${this.props.className} carousel-ninja__outer`}>
-        <ul ref="inner"
-            className={`carousel-ninja__inner ${this.state.dragging ? 'carousel-ninja__inner--dragging' : ''}`}
-            style={style}
-            onMouseDown={this.onMouseDown.bind(this)}
-            onMouseMove={this.onMouseMove.bind(this)}
-            onMouseUp={this.onMouseUp.bind(this)}
-            onMouseLeave={this.onMouseLeave.bind(this)}>
+        <div className={`${this.props.className} carousel-ninja__inner ${this.state.dragging ? 'carousel-ninja__inner--dragging' : ''}`}
+             onMouseDown={this.onMouseDown.bind(this)}
+             onMouseMove={this.onMouseMove.bind(this)}
+             onMouseUp={this.onMouseUp.bind(this)}
+             onMouseLeave={this.onMouseLeave.bind(this)}>
 
-          {React.Children.map(this.props.children, (child: React.ReactNode, i: number) => {
-            const isSelectedChild = i === this.props.select;
+          {children.map((child: React.ReactNode, i: number) => {
+            const isSelectedChild = (i === this.props.select);
+            const arrangedPosition = arranged.indexOf(child);
+
+            let calcFunction: string;
+            if (arrangedPosition < halfSideSize) {
+              // half of left
+              let baseTranslateX = (halfSideSize - arrangedPosition) * this.state.innerWidth;
+              calcFunction = `calc(50% - ${baseTranslateX - this.state.deltaX}px)`;
+            } else if (arrangedPosition > halfSideSize) {
+              // half of right
+              let baseTranslateX = (arrangedPosition - halfSideSize) * this.state.innerWidth;
+              calcFunction = `calc(50% + ${baseTranslateX + this.state.deltaX}px)`;
+            } else {
+              // center
+              calcFunction = `calc(50% + ${0 + this.state.deltaX}px)`;
+            }
+
             const className = `carousel-ninja__pane ${isSelectedChild ? this.props.activeClass : ''}`;
+            const style = {
+              left       : calcFunction,
+              marginLeft : `-${this.state.innerWidth / 2}px`,
+              opacity    : (arrangedPosition === 0 || (arrangedPosition + 1) === children.length) ? 0 : 1
+            };
 
-            return <li ref={`child-${i}`}
-                       className={className}
-                       key={i}
-                       aria-hidden={isSelectedChild ? 'false' : 'true'}>{child}</li>;
+            return <div ref={`child-${i}`}
+                        className={className}
+                        key={i}
+                        style={style}
+                        aria-hidden={isSelectedChild ? 'false' : 'true'}>{child}</div>;
           })}
 
-        </ul>
-      </div>
+        </div>
     );
   }
 }
