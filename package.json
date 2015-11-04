@@ -1,0 +1,52 @@
+{
+  "name": "react-carousel-ninja",
+  "version": "0.1.0",
+  "description": "",
+  "author": "ahomu",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ahomu/react-carousel-ninja"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ahomu/react-carousel-ninja/issues"
+  },
+  "homepage": "https://github.com/ahomu/Loxe",
+  "scripts": {
+    "postinstall": "npm run compile",
+    "compile": "tsc --outDir ./lib && babel ./lib --out-dir ./lib",
+    "test": "karma start --singleRun",
+    "bundle:watch": "npm run bundle -- --watch",
+    "bundle:libs": "browserify -d -p licensify -r react -r react-dom > libs.js",
+    "bundle": "node bundle.js",
+    "minify": "uglifyjs ./react-carousel-ninja.js -m -c --comments '/Modules in this bundle/' -o ./react-carousel-ninja.min.js",
+    "build": "npm run bundle && npm run minify",
+    "patch": "npm version patch -m \"bump v%s !\"",
+    "minor": "npm version minor -m \"bump v%s !!\"",
+    "major": "npm version major -m \"bump v%s !!!\""
+  },
+  "files": [
+    "src",
+    "react-carousel-ninja.js",
+    "react-carousel-ninja.min.js",
+    "README.md",
+    "package.json"
+  ],
+  "dependencies": {
+    "debounce": "^1.0.0",
+    "react": "^0.14.2",
+    "react-addons-css-transition-group": "^0.14.2",
+    "react-dom": "^0.14.2"
+  },
+  "devDependencies": {
+    "babel": "^5.8.29",
+    "babelify": "^6.4.0",
+    "browserify": "^12.0.1",
+    "licensify": "^2.0.1",
+    "tsify": "^0.12.2",
+    "typescript": "^1.6.2",
+    "uglifyjs": "^2.4.10",
+    "watchify": "^3.6.0"
+  }
+}
