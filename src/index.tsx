@@ -96,14 +96,6 @@ class CarouselNinja extends React.Component<CarouselNinjaProps, any> {
   }
 }
 
-ReactDOM.render(<CarouselNinja className="myCarousel">
-  <article className="myPane" id="first"><img width="640" height="480" src="http://lorempixel.com/640/479/cats/" /></article>
-  <article className="myPane" id="second"><img width="640" height="480" src="http://lorempixel.com/639/480/cats/" /></article>
-  <article className="myPane" id="third"><img width="640" height="480" src="http://lorempixel.com/639/479/cats/" /></article>
-  <article className="myPane" id="fourth"><img width="640" height="480" src="http://lorempixel.com/640/478/cats/" /></article>
-  <article className="myPane" id="fifth"><img width="640" height="480" src="http://lorempixel.com/638/480/cats/" /></article>
-</CarouselNinja>, document.getElementById('app'));
-
 export {
   CarouselNinja,
   CarouselNinjaContainer,
