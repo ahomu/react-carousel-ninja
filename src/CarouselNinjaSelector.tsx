@@ -12,7 +12,7 @@ interface CarouselSelectorProps extends React.Props<CarouselNinjaSelector> {
 export default class CarouselNinjaSelector extends React.Component<CarouselSelectorProps, any> {
 
   static defaultProps = {
-    activeClass     : 'is-active',
+    activeClass     : ' is-active',
     select          : 0,
     length          : 0,
     onSelect        : () => {},
@@ -35,7 +35,8 @@ export default class CarouselNinjaSelector extends React.Component<CarouselSelec
   renderFromChildren() {
     return React.Children.map(this.props.children, (child: React.ReactNode, i: number) => {
       const isSelectedChild = i === this.props.select;
-      const className = `${isSelectedChild ? this.props.activeClass : ''}`;
+      let className = 'carousel-ninja__selector-item';
+      className += isSelectedChild ? this.props.activeClass : '';
       return (
         <li className={className}
             key={i}
@@ -51,7 +52,8 @@ export default class CarouselNinjaSelector extends React.Component<CarouselSelec
     const children: ReactElement<any>[] = [], iz = this.props.length;
     for (let i = 0; i < iz; i++) {
       let isSelectedChild = i === this.props.select;
-      let className = `carousel-ninja__selector-item ${isSelectedChild ? this.props.activeClass : ''}`;
+      let className = 'carousel-ninja__selector-item';
+      className += isSelectedChild ? this.props.activeClass : '';
       children.push((
         <li className={className}
             key={i}

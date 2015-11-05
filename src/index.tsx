@@ -21,7 +21,7 @@ class CarouselNinja extends React.Component<CarouselNinjaProps, any> {
 
   static defaultProps = {
     className   : '',
-    activeClass : 'is-active',
+    activeClass : ' is-active',
     onSelect    : () => {},
   };
 

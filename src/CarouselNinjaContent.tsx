@@ -9,8 +9,9 @@ const DIRECTION_RIGHT = 0;
 const DIRECTION_LEFT  = 1;
 
 interface CarouselNinjaContentProps extends React.Props<CarouselNinjaContent> {
-  className?: string;
   activeClass?: string;
+  rightEdgeClass?: string;
+  leftEdgeClass?: string;
   select: number;
   onSelect? : (nextI: number, curtI: number) => void;
   onSwipeLeft? : (nextI: number) => void;
@@ -27,12 +28,13 @@ interface CarouselNinjaContentState {
 export default class CarouselNinjaContent extends React.Component<CarouselNinjaContentProps, CarouselNinjaContentState> {
 
   static defaultProps = {
-    className    : '',
-    activeClass  : 'is-active',
-    select       : 0,
-    onSelect     : () => {},
-    onSwipeLeft  : () => {},
-    onSwipeRight : () => {}
+    activeClass    : ' is-active',
+    rightEdgeClass : ' is-right',
+    leftEdgeClass  : ' is-left',
+    select         : 0,
+    onSelect       : () => {},
+    onSwipeLeft    : () => {},
+    onSwipeRight   : () => {}
   };
 
   state = {
@@ -173,7 +175,7 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
     }
 
     return (
-        <div className={`${this.props.className} carousel-ninja__inner ${this.state.dragging ? 'carousel-ninja__inner--dragging' : ''}`}
+        <div className={`carousel-ninja__inner ${this.state.dragging ? 'carousel-ninja__inner--dragging' : ''}`}
              onMouseDown={this.onMouseDown.bind(this)}
              onMouseMove={this.onMouseMove.bind(this)}
              onMouseUp={this.onMouseUp.bind(this)}
@@ -205,11 +207,14 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
               calcFunction = `calc(50% + ${0 + this.state.deltaX}px)`;
             }
 
-            const className = `carousel-ninja__pane ${isCenter ? this.props.activeClass : ''}`;
+            let className = 'carousel-ninja__pane';
+            className += isCenter    ? this.props.activeClass    : '';
+            className += isRightEdge ? this.props.rightEdgeClass : '';
+            className += isLeftEdge  ? this.props.leftEdgeClass  : '';
+
             const style = {
               left       : calcFunction,
-              marginLeft : `-${this.state.innerWidth / 2}px`,
-              opacity    : (isLeftEdge || isRightEdge) ? 0 : 1
+              marginLeft : `-${this.state.innerWidth / 2}px`
             };
 
             return <div ref={`child-${i}`}
