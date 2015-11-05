@@ -1,6 +1,6 @@
 {
   "name": "react-carousel-ninja",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "author": "ahomu",
   "main": "lib/index.js",
@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/ahomu/react-carousel-ninja/issues"
   },
-  "homepage": "https://github.com/ahomu/Loxe",
+  "homepage": "https://github.com/ahomu/react-carousel-ninja",
   "scripts": {
     "postinstall": "npm run compile",
     "compile": "tsc --outDir ./lib && babel ./lib --out-dir ./lib",
@@ -40,19 +40,18 @@
     "package.json"
   ],
   "dependencies": {
+    "babel": "^5.8.29",
+    "typescript": "^1.6.2",
     "debounce": "^1.0.0",
     "react": "^0.14.2",
-    "react-addons-css-transition-group": "^0.14.2",
     "react-dom": "^0.14.2",
     "throttleit": "^1.0.0"
   },
   "devDependencies": {
-    "babel": "^5.8.29",
     "babelify": "^6.4.0",
     "browserify": "^12.0.1",
     "licensify": "^2.0.1",
     "tsify": "^0.12.2",
-    "typescript": "^1.6.2",
     "uglifyjs": "^2.4.10",
     "watchify": "^3.6.0"
   }
