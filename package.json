@@ -33,6 +33,10 @@
     "react-carousel-ninja.js",
     "react-carousel-ninja.min.js",
     "README.md",
+    "bundle.js",
+    "typings",
+    "tsconfig.json",
+    ".babelrc",
     "package.json"
   ],
   "dependencies": {
