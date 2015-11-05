@@ -8,7 +8,7 @@ const DELTA_PERCENTAGE_SWIPE   = .2;
 const DIRECTION_RIGHT = 0;
 const DIRECTION_LEFT  = 1;
 
-interface CarouselNinjaContentProps extends React.Props<CarouselNinjaContent> {
+interface CarouselNinjaContainerProps extends React.Props<CarouselNinjaContainer> {
   activeClass?: string;
   rightEdgeClass?: string;
   leftEdgeClass?: string;
@@ -18,14 +18,14 @@ interface CarouselNinjaContentProps extends React.Props<CarouselNinjaContent> {
   onSwipeRight? : (nextI: number) => void;
 }
 
-interface CarouselNinjaContentState {
+interface CarouselNinjaContainerState {
   innerWidth?: number;
   dragging?: boolean;
   deltaX?: number;
   deltaY?: number;
 }
 
-export default class CarouselNinjaContent extends React.Component<CarouselNinjaContentProps, CarouselNinjaContentState> {
+export default class CarouselNinjaContainer extends React.Component<CarouselNinjaContainerProps, CarouselNinjaContainerState> {
 
   static defaultProps = {
     activeClass    : ' is-active',
@@ -132,13 +132,13 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
     window.addEventListener('resize', this.onResize);
   }
 
-  componentWillReceiveProps(nextProps: CarouselNinjaContentProps) {
+  componentWillReceiveProps(nextProps: CarouselNinjaContainerProps) {
     if (this.props.onSelect) {
       this.props.onSelect(nextProps.select, this.props.select);
     }
   }
 
-  shouldComponentUpdate(nextProps: CarouselNinjaContentProps, nextState: CarouselNinjaContentState) {
+  shouldComponentUpdate(nextProps: CarouselNinjaContainerProps, nextState: CarouselNinjaContainerState) {
     return false ||
       nextProps.select !== this.props.select ||
       nextProps.children !== this.props.children ||
@@ -175,7 +175,7 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
     }
 
     return (
-        <div className={`carousel-ninja__inner ${this.state.dragging ? 'carousel-ninja__inner--dragging' : ''}`}
+        <div className={`CarouselNinjaContainer ${this.state.dragging ? 'CarouselNinjaContainer--dragging' : ''}`}
              onMouseDown={this.onMouseDown.bind(this)}
              onMouseMove={this.onMouseMove.bind(this)}
              onMouseUp={this.onMouseUp.bind(this)}
@@ -207,7 +207,7 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
               calcFunction = `calc(50% + ${0 + this.state.deltaX}px)`;
             }
 
-            let className = 'carousel-ninja__pane';
+            let className = 'CarouselNinjaContainer__pane';
             className += isCenter    ? this.props.activeClass    : '';
             className += isRightEdge ? this.props.rightEdgeClass : '';
             className += isLeftEdge  ? this.props.leftEdgeClass  : '';
@@ -217,11 +217,11 @@ export default class CarouselNinjaContent extends React.Component<CarouselNinjaC
               marginLeft : `-${this.state.innerWidth / 2}px`
             };
 
-            return <div ref={`child-${i}`}
+            return <article ref={`child-${i}`}
                         className={className}
                         key={i}
                         style={style}
-                        aria-hidden={isCenter ? 'false' : 'true'}>{child}</div>;
+                        aria-hidden={isCenter ? 'false' : 'true'}>{child}</article>;
           })}
 
         </div>

@@ -1,0 +1,29 @@
+/**
+ * react-carousel-ninja
+ */
+
+.CarouselNinjaContainer {
+  position: relative;
+  overflow: hidden;
+}
+
+.CarouselNinjaContainer__pane {
+  position: absolute;
+  top: 0;
+  transition: left 0.15s linear;
+  will-change: left;
+}
+
+.CarouselNinjaContainer--dragging .CarouselNinjaContainer__pane {
+  transition: none;
+}
+
+.CarouselNinjaSelector {
+  margin: 0;
+  padding: 0;
+}
+
+.CarouselNinjaSelector__item {
+  float: left;
+  list-style-type: none;
+}

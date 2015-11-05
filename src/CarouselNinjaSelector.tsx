@@ -35,7 +35,7 @@ export default class CarouselNinjaSelector extends React.Component<CarouselSelec
   renderFromChildren() {
     return React.Children.map(this.props.children, (child: React.ReactNode, i: number) => {
       const isSelectedChild = i === this.props.select;
-      let className = 'carousel-ninja__selector-item';
+      let className = 'CarouselNinjaSelector__item';
       className += isSelectedChild ? this.props.activeClass : '';
       return (
         <li className={className}
@@ -52,7 +52,7 @@ export default class CarouselNinjaSelector extends React.Component<CarouselSelec
     const children: ReactElement<any>[] = [], iz = this.props.length;
     for (let i = 0; i < iz; i++) {
       let isSelectedChild = i === this.props.select;
-      let className = 'carousel-ninja__selector-item';
+      let className = 'CarouselNinjaSelector__item';
       className += isSelectedChild ? this.props.activeClass : '';
       children.push((
         <li className={className}
@@ -68,7 +68,7 @@ export default class CarouselNinjaSelector extends React.Component<CarouselSelec
 
   render() {
     return (
-      <ul className="carousel-ninja__selector">
+      <ul className="CarouselNinjaSelector">
         {React.Children.count(this.props.children) ? this.renderFromChildren() : this.renderItemsBySelf()}
       </ul>
     );

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as throttle from 'throttleit';
-import CarouselNinjaContent from './CarouselNinjaContent';
+import CarouselNinjaContainer from './CarouselNinjaContainer';
 import CarouselNinjaSelector from './CarouselNinjaSelector';
 
 const DURATION_THROTTLE_KEYUP = 150;
@@ -78,13 +78,13 @@ class CarouselNinja extends React.Component<CarouselNinjaProps, any> {
 
     return (
       <div tabIndex={0} className={this.props.className} onKeyUp={this.onKeyUp.bind(this)}>
-        <CarouselNinjaContent activeClass={this.props.activeClass}
-                              select={this.state.currentSelect}
-                              onSelect={this.onSelectChange.bind(this)}
-                              onSwipeLeft={this.onSwipeLeft.bind(this)}
-                              onSwipeRight={this.onSwipeRight.bind(this)}>
+        <CarouselNinjaContainer activeClass={this.props.activeClass}
+                                select={this.state.currentSelect}
+                                onSelect={this.onSelectChange.bind(this)}
+                                onSwipeLeft={this.onSwipeLeft.bind(this)}
+                                onSwipeRight={this.onSwipeRight.bind(this)}>
           {this.props.children}
-        </CarouselNinjaContent>
+        </CarouselNinjaContainer>
 
         <CarouselNinjaSelector activeClass={this.props.activeClass}
                                select={this.state.currentSelect}
@@ -96,8 +96,16 @@ class CarouselNinja extends React.Component<CarouselNinjaProps, any> {
   }
 }
 
+ReactDOM.render(<CarouselNinja className="myCarousel">
+  <article className="myPane" id="first"><img width="640" height="480" src="http://lorempixel.com/640/479/cats/" /></article>
+  <article className="myPane" id="second"><img width="640" height="480" src="http://lorempixel.com/639/480/cats/" /></article>
+  <article className="myPane" id="third"><img width="640" height="480" src="http://lorempixel.com/639/479/cats/" /></article>
+  <article className="myPane" id="fourth"><img width="640" height="480" src="http://lorempixel.com/640/478/cats/" /></article>
+  <article className="myPane" id="fifth"><img width="640" height="480" src="http://lorempixel.com/638/480/cats/" /></article>
+</CarouselNinja>, document.getElementById('app'));
+
 export {
   CarouselNinja,
-  CarouselNinjaContent,
+  CarouselNinjaContainer,
   CarouselNinjaSelector
 };
