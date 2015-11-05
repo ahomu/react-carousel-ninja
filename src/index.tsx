@@ -2,8 +2,11 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import CarouselNinjaContent from './CarouselNinjaContent';
+import * as throttle from 'throttleit';
+import CarouselNinjaContainer from './CarouselNinjaContainer';
 import CarouselNinjaSelector from './CarouselNinjaSelector';
+
+const DURATION_THROTTLE_KEYUP = 150;
 
 const KEYCODE_LEFT  = 37;
 const KEYCODE_RIGHT = 39;
@@ -18,7 +21,7 @@ class CarouselNinja extends React.Component<CarouselNinjaProps, any> {
 
   static defaultProps = {
     className   : '',
-    activeClass : 'is-active',
+    activeClass : ' is-active',
     onSelect    : () => {},
   };
 
@@ -27,15 +30,23 @@ class CarouselNinja extends React.Component<CarouselNinjaProps, any> {
   };
 
   updateSelect(select: number) {
-    if (select < 0 || select > React.Children.count(this.props.children) - 1) {
-      return;
+    const lastIndex = React.Children.count(this.props.children) - 1;
+    if (select < 0) {
+      this.setState({
+        currentSelect : lastIndex
+      });
+    } else if (select > lastIndex) {
+      this.setState({
+        currentSelect : 0
+      });
+    } else {
+      this.setState({
+        currentSelect : select
+      });
     }
-    this.setState({
-      currentSelect : select
-    });
   }
 
-  onKeyUp(e: KeyboardEvent) {
+  onKeyUp = throttle((e: KeyboardEvent) => {
     switch(e.keyCode) {
       case KEYCODE_LEFT:
         this.updateSelect(this.state.currentSelect - 1);
@@ -44,7 +55,7 @@ class CarouselNinja extends React.Component<CarouselNinjaProps, any> {
         this.updateSelect(this.state.currentSelect + 1);
         break;
     }
-  }
+  }, DURATION_THROTTLE_KEYUP);
 
   onSelectChange(nextI: number, curtI: number) {
     this.props.onSelect(nextI, curtI);
@@ -67,13 +78,13 @@ class CarouselNinja extends React.Component<CarouselNinjaProps, any> {
 
     return (
       <div tabIndex={0} className={this.props.className} onKeyUp={this.onKeyUp.bind(this)}>
-        <CarouselNinjaContent activeClass={this.props.activeClass}
-                              select={this.state.currentSelect}
-                              onSelect={this.onSelectChange.bind(this)}
-                              onSwipeLeft={this.onSwipeLeft.bind(this)}
-                              onSwipeRight={this.onSwipeRight.bind(this)}>
+        <CarouselNinjaContainer activeClass={this.props.activeClass}
+                                select={this.state.currentSelect}
+                                onSelect={this.onSelectChange.bind(this)}
+                                onSwipeLeft={this.onSwipeLeft.bind(this)}
+                                onSwipeRight={this.onSwipeRight.bind(this)}>
           {this.props.children}
-        </CarouselNinjaContent>
+        </CarouselNinjaContainer>
 
         <CarouselNinjaSelector activeClass={this.props.activeClass}
                                select={this.state.currentSelect}
@@ -87,6 +98,6 @@ class CarouselNinja extends React.Component<CarouselNinjaProps, any> {
 
 export {
   CarouselNinja,
-  CarouselNinjaContent,
+  CarouselNinjaContainer,
   CarouselNinjaSelector
 };

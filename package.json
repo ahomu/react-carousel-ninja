@@ -4,6 +4,7 @@
   "description": "",
   "author": "ahomu",
   "main": "lib/index.js",
+  "style": "react-carousel-ninja.css",
   "repository": {
     "type": "git",
     "url": "https://github.com/ahomu/react-carousel-ninja"
@@ -28,16 +29,22 @@
   },
   "files": [
     "src",
+    "react-carousel-ninja.css",
     "react-carousel-ninja.js",
     "react-carousel-ninja.min.js",
     "README.md",
+    "bundle.js",
+    "typings",
+    "tsconfig.json",
+    ".babelrc",
     "package.json"
   ],
   "dependencies": {
     "debounce": "^1.0.0",
     "react": "^0.14.2",
     "react-addons-css-transition-group": "^0.14.2",
-    "react-dom": "^0.14.2"
+    "react-dom": "^0.14.2",
+    "throttleit": "^1.0.0"
   },
   "devDependencies": {
     "babel": "^5.8.29",
