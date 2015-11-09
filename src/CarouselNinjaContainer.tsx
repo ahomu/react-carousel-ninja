@@ -217,11 +217,11 @@ export default class CarouselNinjaContainer extends React.Component<CarouselNinj
               marginLeft : `-${this.state.innerWidth / 2}px`
             };
 
-            return <article ref={`child-${i}`}
+            return <div ref={`child-${i}`}
                         className={className}
                         key={i}
                         style={style}
-                        aria-hidden={isCenter ? 'false' : 'true'}>{child}</article>;
+                        aria-hidden={isCenter ? 'false' : 'true'}>{child}</div>;
           })}
 
         </div>
