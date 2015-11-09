@@ -47,6 +47,8 @@ export default class CarouselNinjaContainer extends React.Component<CarouselNinj
     deltaY     : 0
   };
 
+  _isMounted = false;
+
   startCoordinate: {
     x: number,
     y: number
@@ -140,6 +142,7 @@ export default class CarouselNinjaContainer extends React.Component<CarouselNinj
 
   componentDidMount() {
     this.calculateWidth();
+    this._isMounted = true;
     window.addEventListener('resize', this.onResize);
   }
 
@@ -185,8 +188,12 @@ export default class CarouselNinjaContainer extends React.Component<CarouselNinj
       leftward = [].concat(rightward.splice(halfSideSize), leftward);
     }
 
+    let className = 'CarouselNinjaContainer';
+    className += this.state.dragging ? ' CarouselNinjaContainer--dragging' : '';
+    className += this._isMounted ? ' CarouselNinjaContainer--mounted' : '';
+
     return (
-        <div className={`CarouselNinjaContainer ${this.state.dragging ? 'CarouselNinjaContainer--dragging' : ''}`}
+        <div className={className}
              {...this.provideMouseEventHandlers()}>
 
           {children.map((child: React.ReactNode, i: number) => {
