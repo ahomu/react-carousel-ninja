@@ -16,6 +16,7 @@ interface CarouselNinjaContainerProps extends React.Props<CarouselNinjaContainer
   onSelect? : (nextI: number, curtI: number) => void;
   onSwipeLeft? : (nextI: number) => void;
   onSwipeRight? : (nextI: number) => void;
+  swipe?: boolean;
 }
 
 interface CarouselNinjaContainerState {
@@ -34,7 +35,8 @@ export default class CarouselNinjaContainer extends React.Component<CarouselNinj
     select         : 0,
     onSelect       : () => {},
     onSwipeLeft    : () => {},
-    onSwipeRight   : () => {}
+    onSwipeRight   : () => {},
+    swipe          : false
   };
 
   state = {
@@ -93,6 +95,15 @@ export default class CarouselNinjaContainer extends React.Component<CarouselNinj
       return;
     }
     this.handleSwipe();
+  }
+
+  provideMouseEventHandlers() {
+    return this.props.swipe ? {
+      onMouseDown  : this.onMouseDown.bind(this),
+      onMouseMove  : this.onMouseMove.bind(this),
+      onMouseUp    : this.onMouseUp.bind(this),
+      onMouseLeave : this.onMouseLeave.bind(this)
+    } : null;
   }
 
   handleSwipe() {
@@ -176,10 +187,7 @@ export default class CarouselNinjaContainer extends React.Component<CarouselNinj
 
     return (
         <div className={`CarouselNinjaContainer ${this.state.dragging ? 'CarouselNinjaContainer--dragging' : ''}`}
-             onMouseDown={this.onMouseDown.bind(this)}
-             onMouseMove={this.onMouseMove.bind(this)}
-             onMouseUp={this.onMouseUp.bind(this)}
-             onMouseLeave={this.onMouseLeave.bind(this)}>
+             {...this.provideMouseEventHandlers()}>
 
           {children.map((child: React.ReactNode, i: number) => {
             const isCenter = (i === this.props.select);
