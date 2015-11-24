@@ -1,6 +1,6 @@
 {
   "name": "react-carousel-ninja",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "",
   "author": "ahomu",
   "main": "lib/index.js",
@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/ahomu/react-carousel-ninja",
   "scripts": {
-    "postinstall": "npm run compile",
+    "prepublish": "npm run compile",
     "compile": "tsc --outDir ./lib && babel ./lib --out-dir ./lib",
     "test": "karma start --singleRun",
     "bundle:watch": "npm run bundle -- --watch",
@@ -28,15 +28,12 @@
     "major": "npm version major -m \"bump v%s !!!\""
   },
   "files": [
+    "lib",
     "src",
     "react-carousel-ninja.css",
     "react-carousel-ninja.js",
     "react-carousel-ninja.min.js",
     "README.md",
-    "bundle.js",
-    "typings",
-    "tsconfig.json",
-    ".babelrc",
     "package.json"
   ],
   "dependencies": {
